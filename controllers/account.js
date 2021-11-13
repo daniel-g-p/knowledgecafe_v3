@@ -27,7 +27,7 @@ export default {
       maxAge: 1000 * 60 * 60 * 24,
       signed: true,
       httpOnly: true,
-      secure: config.nodeEnv !== "development",
+      // secure: config.nodeEnv !== "development",
     };
     return res
       .status(200)
