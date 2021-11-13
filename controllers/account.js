@@ -28,10 +28,8 @@ export default {
       signed: true,
       httpOnly: true,
       secure: config.nodeEnv !== "development",
+      domain: config.clientDomain,
     };
-    if (config.nodeEnv !== "development") {
-      cookieOptions.domain = config.clientUrl;
-    }
     return res
       .status(200)
       .cookie("userId", jwtToken, cookieOptions)
