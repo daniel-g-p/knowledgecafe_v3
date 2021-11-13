@@ -26,9 +26,12 @@ export default {
     const cookieOptions = {
       maxAge: 1000 * 60 * 60 * 24,
       signed: true,
-      // httpOnly: true,
-      // secure: config.nodeEnv !== "development",
+      httpOnly: true,
+      secure: config.nodeEnv !== "development",
     };
+    if (config.nodeEnv !== "development") {
+      cookieOptions.domain = config.clientUrl;
+    }
     return res
       .status(200)
       .cookie("userId", jwtToken, cookieOptions)
