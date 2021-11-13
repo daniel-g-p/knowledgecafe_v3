@@ -26,7 +26,7 @@ export default {
     const cookieOptions = {
       maxAge: 1000 * 60 * 60 * 24,
       signed: true,
-      httpOnly: true,
+      // httpOnly: true,
       // secure: config.nodeEnv !== "development",
     };
     return res
