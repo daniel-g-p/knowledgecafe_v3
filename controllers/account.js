@@ -31,7 +31,6 @@ export default {
       signed: true,
       httpOnly: true,
       secure: config.nodeEnv !== "development",
-      domain: config.clientDomain,
     };
     return res
       .status(200)
