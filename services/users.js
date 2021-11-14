@@ -85,4 +85,87 @@ export default {
     const user = await database.findById("users", userId, ["role"]);
     return user.role === "admin";
   },
+  async prepareVerification(userId) {
+    const fields = ["email", "name", "token", "verified"];
+    const user = await database.findById("users", userId, fields);
+    if (!user) {
+      return false;
+    }
+    const verificationValid = user.token.expires > new Date().getTime() && !user.verified
+    if (!verificationValid) {
+      await database.updateById("users", userId, { token: {} });
+    }
+    return verificationValid ? user : false;
+  },
+  validateRegistrationData(user) {
+    const data = {
+      name: user.name ? user.name.trim() : "",
+      email: user.email ? user.email.toLowerCase().trim() : "",
+      username: user.username,
+      password: user.password,
+      confirmPassword: user.confirmPassword,
+      token: user.token,
+    };
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const usernameRegex = /^[a-zA-Z0-9._-]+$/;
+    const passwordRegex =
+      /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[._\-!?@#$%^&+=])./;
+    return validate(
+      data,
+      condition(data.name, "Bitte gebe einen Namen ein."),
+      condition(data.email, "Bitte gebe eine Emailadresse ein."),
+      condition(
+        emailRegex.test(data.email),
+        "Bitte gebe ein gültige Emailadresse an."
+      ),
+      condition(data.username, "Bitte gebe einen Benutzernamen ein."),
+      condition(
+        usernameRegex.test(data.username),
+        "Der Benutzername enthält ungültige Sonderzeichen."
+      ),
+      condition(data.password, "Bitte gebe ein Passwort ein."),
+      condition(
+        passwordRegex.test(data.password),
+        "Dein Password muss mindestes 1 Großbuchtaben, 1 Kleinbuchstaben, 1 Zahl, und 1 Sonderzeichen enthalten."
+      ),
+      condition(data.confirmPassword, "Bitte bestätige dein Passwort."),
+      condition(
+        data.confirmPassword === data.password,
+        "Die Passwörter stimmen nicht überein."
+      ),
+      condition(data.token, "Bitte gebe deinen Sicherheitscode ein."),
+      condition(
+        data.token.length === 6,
+        "Der 6-stellige Sicherheitscode ist ungültig."
+      )
+    );
+  },
+  async checkVerification(userId, email, token) {
+    const user = await database.findById("users", userId, ["email", "token"]);
+    return validate(
+      user,
+      condition(
+        user.email === email,
+        "An die Emailadresse wurde keine Einladung verschickt."
+      ),
+      condition(
+        user.token.secret === token,
+        "Bitte überprüfe deinen Sicherheitscode."
+      ),
+      condition(
+        user.token.expires > new Date().getTime(),
+        "Der Anmeldelink ist abgelaufen."
+      )
+    );
+  },
+  async completeRegistration(userId, name, username, password) {
+    const passwordHash = await hash(password);
+    const update = {
+      name,
+      username,
+      password: passwordHash,
+      verified: true,
+    };
+    return await database.updateById("users", userId, update);
+  },
 };

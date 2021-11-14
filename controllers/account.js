@@ -8,9 +8,12 @@ import usersService from "../services/users.js";
 export default {
   async login(req, res, next) {
     const { user, password } = req.body;
-    const { valid, message, data } = usersService.validateLogin(user, password);
+    const { valid, errorMessage, data } = usersService.validateLogin(
+      user,
+      password
+    );
     if (!valid) {
-      return res.status(400).json({ message });
+      return res.status(400).json({ message: errorMessage });
     }
     const theUser = await usersService.findUserByLogin(data.user);
     if (!theUser) {
@@ -47,6 +50,33 @@ export default {
     }
     return res.status(200).json({ ok: true, user });
   },
+  async getRegistrationPage(req, res, next) {
+    const { userId } = req.params;
+    const user = await usersService.prepareVerification(userId);
+    if (!user) {
+      return res.status(400).json({ message: "Der Anmeldelink ist ungültig." });
+    }
+    return res.status(200).json({ user, ok: true });
+  },
+  async completeRegistration(req, res, next) {
+    const { userId } = req.params;
+    const inputValidation = usersService.validateRegistrationData(req.body);
+    const { valid, data, message } = inputValidation;
+    if (!valid) {
+      return res.json({ message });
+    }
+    const { name, email, username, password, token } = data;
+    const credentials = await usersService.checkVerification(
+      userId,
+      email,
+      token
+    );
+    if (!credentials.valid) {
+      return res.json({ message: credentials.message });
+    }
+    await usersService.completeRegistration(userId, name, username, password);
+    return res.status(200).json({ ok: true });
+  },
   async getUserData(req, res, next) {
     const { tokenData } = verifyJwtToken(req.signedCookies.userId);
     const user = await usersService.getUserData(tokenData);
@@ -80,9 +110,9 @@ export default {
   },
   async changePassword(req, res, next) {
     const validation = usersService.validatePasswordEdit(req.body);
-    const { valid, data, message } = validation;
+    const { valid, data, errorMessage } = validation;
     if (!valid) {
-      return res.status(400).json({ message });
+      return res.status(400).json({ message: errorMessage });
     }
     const { tokenData } = verifyJwtToken(req.signedCookies.userId);
     const correctPassword = await usersService.passwordIsCorrect(

@@ -1,3 +1,5 @@
+import { sendEmail } from "../utilities/email.js";
+
 import teamService from "../services/team.js";
 import usersService from "../services/users.js";
 
@@ -27,7 +29,20 @@ export default {
       const message = "Es gibt bereits einen Benutzer mit dieser Emailadresse.";
       return res.status(400).json({ message });
     }
-    await teamService.createNewMember(data.email, data.role);
+    const token = teamService.createRegistrationToken();
+    const newUser = await teamService.createNewMember(
+      data.name,
+      data.email,
+      data.role,
+      token
+    );
+    const userId = newUser.insertedId.toString();
+    await teamService.sendWelcomeEmail(
+      data.name,
+      data.email,
+      userId,
+      token
+    );
     return res.status(200).json({ ok: true });
   },
 };

@@ -10,7 +10,7 @@ const setIdQuery = (id) => {
   return { _id: new ObjectId(id) };
 };
 
-const setOptions = (projectionFields, sortOptions) => {
+const setOptions = (projectionFields, sortOptions = {}) => {
   const options = { projection: {}, sort: sortOptions };
   for (let field of projectionFields) {
     options.projection[field] = 1;
@@ -24,10 +24,10 @@ export default {
     const isArray = Array.isArray(data);
     return isArray ? await db.insertMany(data) : await db.insertOne(data);
   },
-  async findById(collection, id, projectionFields = [], sortOptions = {}) {
+  async findById(collection, id, projectionFields = []) {
     const db = setDb(collection);
     const query = setIdQuery(id);
-    const options = setOptions(projectionFields, sortOptions);
+    const options = setOptions(projectionFields);
     return await db.findOne(query, options);
   },
   async find(collection, query, projectionFields = [], sortOptions = {}) {

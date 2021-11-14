@@ -149,7 +149,7 @@ const seedAdmin = async () => {
   for (let i = 0; i < 6; i++) {
     token = `${token}${chance.integer({ min: 0, max: 9 })}`;
   }
-  const admin = newUser(email, "admin", token);
+  const admin = newUser(name, email, "admin", token);
   const { insertedId } = await database.create("users", admin);
   const passwordHash = await hash(password);
   await database.updateById("users", insertedId, {
@@ -169,7 +169,7 @@ const seedUsers = async (userNames) => {
     for (let i = 0; i < 6; i++) {
       token = `${token}${chance.integer({ min: 0, max: 9 })}`;
     }
-    const user = newUser(email, "user", token);
+    const user = newUser(name, email, "user", token);
     const { insertedId } = await database.create("users", user);
     const username = name.toLowerCase();
     const password = `${name}.2021`;

@@ -1,5 +1,5 @@
-export const condition = (condition, errorMessage) => {
-  return condition ? { valid: true } : { valid: false, errorMessage };
+export const condition = (condition, message) => {
+  return condition ? { valid: true } : { valid: false, message };
 };
 
 export const validate = (data, ...conditions) => {

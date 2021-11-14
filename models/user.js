@@ -1,8 +1,8 @@
-export default (email, role, token) => {
+export default (name, email, role, token) => {
   return {
+    name: name,
     email: email,
     role: role,
-    name: "",
     username: "",
     password: "",
     token: {
