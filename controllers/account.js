@@ -65,6 +65,15 @@ export default {
       return res.json({ message });
     }
     const { name, email, username, password, token } = data;
+    const usernameAvailable = await usersService.usernameAvailable(
+      username,
+      userId
+    );
+    if (!usernameAvailable) {
+      return res.status(400).json({
+        message: `Der Benutzername "${username}" ist bereits vergeben.`,
+      });
+    }
     const credentials = await usersService.checkVerification(
       userId,
       email,
