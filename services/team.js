@@ -28,7 +28,7 @@ export default {
   },
   async sendWelcomeEmail(name, email, userId, token) {
     const subject = "Knowledge Cafe Registrierung";
-    const message = `Hallo ${name},\n\nHerzlich willkommen als neues Mitglied im Knowledge Café. Bitte schließe deine Registrierung unter dem beigefügten Link ab um den Zugriff auf dein Konto freizuschalten. Dein Sicherheitscode ist ${token}.\n\n${config.clientUrl}/account/registrieren/${userId}.\n\nBei fragen kannst du dich jederzeit beim Orga-Team unter ${config.emailAddress} melden.\n\nViele Grüße,\nDein Knowledge Café.`;
+    const message = `Hallo ${name},\n\nHerzlich willkommen als neues Mitglied im Knowledge Café. Bitte schließe deine Registrierung unter dem beigefügten Link ab um den Zugriff auf dein Konto freizuschalten. Dein Sicherheitscode ist ${token}.\n\n${config.appUrl}/account/registrieren/${userId}.\n\nBei fragen kannst du dich jederzeit beim Orga-Team unter ${config.emailAddress} melden.\n\nViele Grüße,\nDein Knowledge Café.`;
     return await sendEmail(name, email, subject, message);
   },
   createRegistrationToken() {

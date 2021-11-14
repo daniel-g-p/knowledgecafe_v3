@@ -65,10 +65,10 @@ const teamData = [
 ];
 
 const adminData = {
-  name: "admin",
-  username: "admin",
-  email: "admin@knowledgecafe.de",
-  password: "admin",
+  name: "Orga-Team",
+  username: "orga",
+  email: "orga2021.kc@gmail.com",
+  password: "test",
 };
 
 const seedProducts = async (productData) => {
@@ -157,6 +157,7 @@ const seedAdmin = async () => {
     username,
     password: passwordHash,
     verified: true,
+    token: {},
   });
   console.log("Admin seeded.");
   return admin;
@@ -179,6 +180,7 @@ const seedUsers = async (userNames) => {
       username,
       password: passwordHash,
       verified: true,
+      token: {},
     });
   }
   console.log("Users seeded.");
@@ -187,11 +189,11 @@ const seedUsers = async (userNames) => {
 const seedDatabase = async () => {
   try {
     await connectToDatabase();
-    const products = await seedProducts(productData);
-    const events = await seedEvents(1);
-    await seedOrders(products, events, 50);
+    const products = await seedProducts([]);
+    const events = await seedEvents(0);
+    await seedOrders(products, events, 0);
     await seedAdmin();
-    await seedUsers(teamData);
+    // await seedUsers(teamData);
     console.log("Database seeded.");
   } catch (error) {
     console.log(error);
