@@ -75,7 +75,7 @@ export default {
       return res.json({ message: credentials.message });
     }
     await usersService.completeRegistration(userId, name, username, password);
-    return res.status(200).json({ ok: true });
+    return res.status(200).clearCookie("userId").json({ ok: true });
   },
   async getUserData(req, res, next) {
     const { tokenData } = verifyJwtToken(req.signedCookies.userId);
