@@ -24,10 +24,10 @@ export default {
         "Das Produktkürzel muss zwischen 1 und 4 Zeichen lang sein."
       ),
       condition(product.price, "Bitte gebe einen verkaufspreis ein."),
-      condition(
-        Math.round((product.price * 100) % 1) === 0,
-        "Der eingegebene Verkauspreis ist ungültig."
-      ),
+      // condition(
+      //   Math.round((product.price * 100) % 1) === 0,
+      //   "Der eingegebene Verkauspreis ist ungültig."
+      // ),
       condition(
         !product.variations.length || product.variations.length > 1,
         "Bitte gebe mindestens zwei Sorten an bzw. lasse das Feld leer."
