@@ -11,6 +11,13 @@ export default {
   async setRole(req, res, next) {
     const { userId } = req.params;
     const { role } = req.body;
+    if (role !== "admin") {
+      const allowed = await teamService.atLeastNAdministrators(2);
+      if (!allowed) {
+        const message = "Es muss mindestens zwei Administratoren geben.";
+        return res.status(400).json({ message });
+      }
+    }
     await teamService.setRole(userId, role);
     return res.status(200).json({ ok: true });
   },
@@ -42,12 +49,7 @@ export default {
       token
     );
     const userId = newUser.insertedId.toString();
-    await teamService.sendWelcomeEmail(
-      data.name,
-      data.email,
-      userId,
-      token
-    );
+    await teamService.sendWelcomeEmail(data.name, data.email, userId, token);
     return res.status(200).json({ ok: true });
   },
 };
