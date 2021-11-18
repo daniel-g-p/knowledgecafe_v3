@@ -15,21 +15,28 @@ export default {
     return database.find("products", {}, [], sort);
   },
   validateProduct(product) {
+    const data = {
+      name: product.name,
+      tag: product.tag.toLowerCase(),
+      price: Math.round(Number(product.price.toString().replace(",", "."))),
+      description: product.description,
+      variations: product.variations,
+    }
     return validate(
-      product,
-      condition(product.name, "Bitte gebe einen Produktnamen ein."),
-      condition(product.tag, "Bitte gebe ein Produktkürzel ein."),
+      data,
+      condition(data.name, "Bitte gebe einen Produktnamen ein."),
+      condition(data.tag, "Bitte gebe ein Produktkürzel ein."),
       condition(
-        product.tag.length <= 4,
+        data.tag.length <= 4,
         "Das Produktkürzel muss zwischen 1 und 4 Zeichen lang sein."
       ),
-      condition(product.price, "Bitte gebe einen verkaufspreis ein."),
+      condition(data.price, "Bitte gebe einen verkaufspreis ein."),
       // condition(
       //   Math.round((product.price * 100) % 1) === 0,
       //   "Der eingegebene Verkauspreis ist ungültig."
       // ),
       condition(
-        !product.variations.length || product.variations.length > 1,
+        !data.variations.length || data.variations.length > 1,
         "Bitte gebe mindestens zwei Sorten an bzw. lasse das Feld leer."
       )
     );
