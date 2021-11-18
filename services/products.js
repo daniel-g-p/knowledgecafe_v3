@@ -25,7 +25,7 @@ export default {
       ),
       condition(product.price, "Bitte gebe einen verkaufspreis ein."),
       condition(
-        (product.price * 100) % 1 === 0,
+        Math.round((product.price * 100) % 1) === 0,
         "Der eingegebene Verkauspreis ist ungültig."
       ),
       condition(
