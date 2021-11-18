@@ -52,4 +52,8 @@ export default {
   async deleteMember(userId) {
     return await database.deleteById("users", userId);
   },
+  async atLeastNAdministrators(n) {
+    const admins = await database.find("users", { role: "admin" }, ["_id"]);
+    return admins.length > n;
+  },
 };

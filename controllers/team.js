@@ -16,6 +16,11 @@ export default {
   },
   async deleteMember(req, res, next) {
     const { userId } = req.params;
+    const allowed = await teamService.atLeastNAdministrators(2);
+    if (!allowed) {
+      const message = "Es muss mindestens zwei Administratoren geben.";
+      return res.status(400).json({ message });
+    }
     await teamService.deleteMember(userId);
     return res.status(200).json({ ok: true });
   },
