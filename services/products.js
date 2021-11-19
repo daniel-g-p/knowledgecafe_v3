@@ -18,10 +18,10 @@ export default {
     const data = {
       name: product.name,
       tag: product.tag.toLowerCase(),
-      price: Math.round(Number(product.price.toString().replace(",", "."))),
       description: product.description,
+      price: Math.round(product.price || 0 * 100) / 100,
       variations: product.variations,
-    }
+    },
     return validate(
       data,
       condition(data.name, "Bitte gebe einen Produktnamen ein."),
@@ -31,10 +31,10 @@ export default {
         "Das Produktkürzel muss zwischen 1 und 4 Zeichen lang sein."
       ),
       condition(data.price, "Bitte gebe einen verkaufspreis ein."),
-      // condition(
-      //   Math.round((product.price * 100) % 1) === 0,
-      //   "Der eingegebene Verkauspreis ist ungültig."
-      // ),
+      condition(
+        Math.round((data.price * 100) % 1) === 0,
+        "Der eingegebene Verkauspreis ist ungültig."
+      ),
       condition(
         !data.variations.length || data.variations.length > 1,
         "Bitte gebe mindestens zwei Sorten an bzw. lasse das Feld leer."
