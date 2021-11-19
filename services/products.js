@@ -21,7 +21,7 @@ export default {
       description: product.description,
       price: Math.round(product.price || 0 * 100) / 100,
       variations: product.variations,
-    },
+    };
     return validate(
       data,
       condition(data.name, "Bitte gebe einen Produktnamen ein."),
