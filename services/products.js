@@ -19,7 +19,7 @@ export default {
       name: product.name,
       tag: product.tag.toLowerCase(),
       description: product.description,
-      price: Math.round(product.price || 0 * 100) / 100,
+      price: Math.round((product.price || 0) * 100) / 100,
       variations: product.variations,
     };
     return validate(
