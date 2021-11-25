@@ -32,7 +32,7 @@ export default {
       ),
       condition(data.price, "Bitte gebe einen verkaufspreis ein."),
       condition(
-        Math.round((data.price * 100) % 1) === 0,
+        Math.round(data.price * 100) % 1 === 0,
         "Der eingegebene Verkauspreis ist ungültig."
       ),
       condition(
